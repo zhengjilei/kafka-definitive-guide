@@ -3,10 +3,12 @@ package consumer.demo1;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.util.*;
 
+// Chapter 4.9
 public class SaveOffsetsOnRebalance implements ConsumerRebalanceListener {
     private KafkaConsumer<String, String> consumer;
 
@@ -34,7 +36,7 @@ public class SaveOffsetsOnRebalance implements ConsumerRebalanceListener {
     }
 
     static long getOffsetFromDB(TopicPartition partition) {
-        return DBOffsetsStore.get(partition.topic() + ":" + partition.partition());
+        return DBOffsetsStore.getOrDefault(partition.topic() + ":" + partition.partition(), 0L);
     }
 
     static void setOffsetToDB(ConsumerRecord<String, String> record) {
@@ -42,7 +44,6 @@ public class SaveOffsetsOnRebalance implements ConsumerRebalanceListener {
     }
 
     public static void main(String[] args) {
-
 
         Properties prop = new Properties();
         prop.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -62,30 +63,38 @@ public class SaveOffsetsOnRebalance implements ConsumerRebalanceListener {
 
         final Thread mainThread = Thread.currentThread();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(){
-            @Override
-            public void run() {
-                System.out.println("System exit");
-                consumer.wakeup();
+        // 退出无限循环
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("System exit");
+            consumer.wakeup(); // shutdown gracefully
 
-                try {
-                    mainThread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            try {
+                mainThread.join(); // 让 mainThread 运行
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }));
+
+
+        try {
+            while (true) {
+                // start transaction
+                ConsumerRecords<String, String> records = consumer.poll(100);
+                for (ConsumerRecord<String, String> record : records) {
+                    // do something to process record
+
+                    setOffsetToDB(record);
                 }
+                commitDBTransaction();
             }
-        });
-
-
-        while (true) {
-            // start transaction
-            ConsumerRecords<String, String> records = consumer.poll(100);
-            for (ConsumerRecord<String, String> record : records) {
-                // do something to process record
-
-                setOffsetToDB(record);
+        } catch (WakeupException e) {
+            // ignore this error, it's expected
+        } finally {
+            try {
+                commitDBTransaction();
+            } finally {
+                consumer.close();
             }
-            commitDBTransaction();
         }
     }
 }
