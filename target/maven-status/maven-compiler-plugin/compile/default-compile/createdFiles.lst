@@ -1,0 +1,9 @@
+main.class
+producer/demo1/BananaPartitioner.class
+producer/demo1/Main.class
+consumer/demo1/RebalanceListener.class
+registry/SchemaProducer.class
+producer/demo1/AvroDemo.class
+producer/demo1/CustomerSerializer.class
+producer/demo1/Customer.class
+producer/demo1/ProducerCallback.class

@@ -1,0 +1,11 @@
+/Users/ethanwalker/repo/java/kafka-definitive-guide/src/main/java/consumer/demo1/RebalanceListener.java
+/Users/ethanwalker/repo/java/kafka-definitive-guide/src/main/java/producer/demo1/AvroDemo.java
+/Users/ethanwalker/repo/java/kafka-definitive-guide/src/main/java/producer/demo1/BananaPartitioner.java
+/Users/ethanwalker/repo/java/kafka-definitive-guide/src/main/java/producer/demo1/Main.java
+/Users/ethanwalker/repo/java/kafka-definitive-guide/src/main/java/main.java
+/Users/ethanwalker/repo/java/kafka-definitive-guide/src/main/java/registry/CachedSchemaRegistryClient.java
+/Users/ethanwalker/repo/java/kafka-definitive-guide/src/main/java/producer/demo1/Customer.java
+/Users/ethanwalker/repo/java/kafka-definitive-guide/src/main/java/registry/SchemaProducer.java
+/Users/ethanwalker/repo/java/kafka-definitive-guide/src/main/java/registry/KafkaSchemaRegistry.java
+/Users/ethanwalker/repo/java/kafka-definitive-guide/src/main/java/producer/demo1/CustomerSerializer.java
+/Users/ethanwalker/repo/java/kafka-definitive-guide/src/main/java/producer/demo1/ProducerCallback.java

@@ -1,5 +1,6 @@
 package producer.demo1;
 
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
@@ -16,7 +17,7 @@ public class AvroDemo {
         kafkaProps.put("bootstrap.servers", "localhost:9092");
         kafkaProps.put("key.serializer", "io.confluent.kafka.serializers.KafkaAvroSerializer");
         kafkaProps.put("value.serializer", "io.confluent.kafka.serializers.KafkaAvroSerializer");
-        kafkaProps.put("schema.registry.url", "avro.registry.center");
+        kafkaProps.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
         String topic = "customerContacts";
         // 非 Arvo 生成的对象，需要手动提供 Schema
         String schemaString = "{\"namespace\": \"customerManagement.avro\", \"type\": \"record\", " +
